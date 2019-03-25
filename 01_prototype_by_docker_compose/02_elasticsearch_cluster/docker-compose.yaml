@@ -1,0 +1,62 @@
+version: '3'
+services:
+  elastic_1:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.0.0-beta1
+    environment:
+     - http.cors.enabled=true
+     - http.port=9200
+     - http.cors.allow-origin="*"
+     - cluster.name=es_newprolab
+     - network.host=_site_
+     - node.name=es_1
+     - discovery.seed_hosts=elastic_1:9300,elastic_2:9300,elastic_3:9300
+     - cluster.initial_master_nodes=es_1
+     - bootstrap.memory_lock=true
+     - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
+    ports:
+     - 9200:9200
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
+  elastic_2:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.0.0-beta1
+    environment:
+     - http.cors.enabled=true
+     - http.port=9200
+     - http.cors.allow-origin="*"
+     - cluster.name=es_newprolab
+     - network.host=_site_
+     - node.name=es_2
+     - discovery.seed_hosts=elastic_1:9300,elastic_2:9300,elastic_3:9300
+     - cluster.initial_master_nodes=es_1
+     - bootstrap.memory_lock=true
+     - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
+    ports:
+     - 9201:9200
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
+  elastic_3:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.0.0-beta1
+    environment:
+     - http.cors.enabled=true
+     - http.port=9200
+     - http.cors.allow-origin="*"
+     - cluster.name=es_newprolab
+     - network.host=_site_
+     - node.name=es_3
+     - discovery.seed_hosts=elastic_1:9300,elastic_2:9300,elastic_3:9300
+     - cluster.initial_master_nodes=es_1
+     - bootstrap.memory_lock=true
+     - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
+    ports:
+     - 9202:9200
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+     

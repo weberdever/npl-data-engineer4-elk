@@ -1,0 +1,61 @@
+version: '3'
+services:
+  elastic-1:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.0.0-beta1
+    environment:
+     - http.cors.enabled=true
+     - http.port=9200
+     - http.cors.allow-origin="*"
+     - cluster.name=es_newprolab
+     - network.host=_site_
+     - node.name=es_1
+     - discovery.seed_hosts=elastic-1:9300,elastic-2:9300
+     - cluster.initial_master_nodes=es_1
+     - bootstrap.memory_lock=true
+     - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
+    ports:
+     - 9200:9200
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
+  elastic-2:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.0.0-beta1
+    environment:
+     - http.cors.enabled=true
+     - http.port=9200
+     - http.cors.allow-origin="*"
+     - cluster.name=es_newprolab
+     - network.host=_site_
+     - node.name=es_2
+     - discovery.seed_hosts=elastic-1:9300,elastic-2:9300
+     - cluster.initial_master_nodes=es_1
+     - bootstrap.memory_lock=true
+     - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
+    ports:
+     - 9201:9200
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+     
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.0.0-beta1
+    environment:
+     - ELASTICSEARCH_HOSTS=["http://elastic-1:9200","http://elastic-2:9200"]
+    ports:
+     - 5601:5601
+
+  logstash:
+    build:
+      context: .
+      dockerfile: Dockerfile-logstash
+    volumes:
+     - ./pipeline/:/usr/share/logstash/pipeline
+     - ./pipelines.yml:/usr/share/logstash/config/pipelines.yml
+     - ./logstash.yml:/usr/share/logstash/config/logstash.yml
+     - ./jvm.options:/usr/share/logstash/config/jvm.options
+    ports:
+     - 9600:9600
+

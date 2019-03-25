@@ -1,0 +1,6 @@
+http.host: 0.0.0.0
+xpack.monitoring.enabled: true
+xpack.monitoring.elasticsearch.hosts: ["http://elastic-1:9200", "http://elastic-2:9200"]
+
+queue.type: persisted
+config.reload.automatic: true
